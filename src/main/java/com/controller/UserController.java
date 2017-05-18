@@ -5,6 +5,7 @@ import com.domain.User;
 import com.service.ContactService;
 import com.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,12 +18,19 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Locale;
 
 @Controller
 public class UserController {
 
+    private final UserService userService;
+    private final MessageSource messageSource;
+
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService, MessageSource messageSource) {
+        this.userService = userService;
+        this.messageSource = messageSource;
+    }
 
     /*
     *   Handle admin user controller
@@ -34,9 +42,9 @@ public class UserController {
     }
 
     @GetMapping("/admin/user/{id}/delete")
-    public String delete(@PathVariable int id, RedirectAttributes redirect) {
+    public String delete(@PathVariable int id, RedirectAttributes redirect, Locale locale) {
         userService.deleteById(id);
-        redirect.addFlashAttribute("success", "Deleted user successfully!");
+        redirect.addFlashAttribute("success", messageSource.getMessage("user.delete.success", null, locale));
         return "redirect:/admin/user/all";
     }
 
@@ -67,12 +75,12 @@ public class UserController {
     }
 
     @PostMapping(value="/user/edit/save")
-    public String processEditUser(@Valid User user, BindingResult result, RedirectAttributes redirect) {
+    public String processEditUser(@Valid User user, BindingResult result, RedirectAttributes redirect, Locale locale) {
         if (result.hasErrors()) {
             return "userEditForm";
         }
         userService.save(user);
-        redirect.addFlashAttribute("success", "Updated user successfully!");
+        redirect.addFlashAttribute("success", messageSource.getMessage("user.save.success", null, locale));
         return "redirect:/user/profile";
     }
 

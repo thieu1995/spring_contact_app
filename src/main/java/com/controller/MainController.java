@@ -4,6 +4,7 @@ import com.domain.Contact;
 import com.domain.User;
 import com.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -16,12 +17,19 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Locale;
 
 @Controller
 public class MainController {
 
+    private final UserService userService;
+    private final MessageSource messageSource;
+
     @Autowired
-    private UserService userService;
+    public MainController(UserService userService, MessageSource messageSource) {
+        this.userService = userService;
+        this.messageSource = messageSource;
+    }
 
     @GetMapping("/")
     public String index() {
@@ -67,12 +75,12 @@ public class MainController {
     }
 
     @PostMapping("/signup/save")
-    public String saveUser(@Valid User user, BindingResult result, RedirectAttributes redirect) {
+    public String saveUser(@Valid User user, BindingResult result, RedirectAttributes redirect, Locale locale) {
         if (result.hasErrors()) {
             return "signup";
         }
         userService.save(user);
-        redirect.addFlashAttribute("success", "Sign up successfully! Sign in to use new account!");
+        redirect.addFlashAttribute("success", messageSource.getMessage("user.signup.success", null, locale));
         return "redirect:/login";
     }
 }

@@ -13,8 +13,12 @@ import java.util.List;
 @RequestMapping("/contactapp/api/bookmarks")
 class BookmarkRestController {
 
+    private final BookmarkRepository bookmarkRepository;
+
     @Autowired
-    private BookmarkRepository bookmarkRepository;
+    public BookmarkRestController(BookmarkRepository bookmarkRepository) {
+        this.bookmarkRepository = bookmarkRepository;
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public List<Bookmark> getAllBookmarksByEmail() {

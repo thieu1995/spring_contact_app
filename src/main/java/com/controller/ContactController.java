@@ -3,6 +3,7 @@ package com.controller;
 import com.domain.Contact;
 import com.service.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -10,12 +11,19 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.Locale;
 
 @Controller
 public class ContactController {
 
+    private final ContactService contactService;
+    private final MessageSource messageSource;
+
     @Autowired
-    private ContactService contactService;
+    public ContactController(ContactService contactService, MessageSource messageSource) {
+        this.contactService = contactService;
+        this.messageSource = messageSource;
+    }
 
     @RequestMapping(value="/contact/all")
     public String viewAllContact(Model model) {
@@ -30,12 +38,12 @@ public class ContactController {
     }
 
     @PostMapping("/contact/save")
-    public String save(@Valid Contact contact, BindingResult result, RedirectAttributes redirect) {
+    public String save(@Valid Contact contact, BindingResult result, RedirectAttributes redirect, Locale locale) {
         if (result.hasErrors()) {
             return "contactForm";
         }
         contactService.save(contact);
-        redirect.addFlashAttribute("success", "Saved contact successfully!");
+        redirect.addFlashAttribute("success", messageSource.getMessage("contact.save.success", null, locale));
         return "redirect:/contact/all";
     }
 
@@ -46,9 +54,9 @@ public class ContactController {
     }
 
     @GetMapping("/contact/{id}/delete")
-    public String delete(@PathVariable int id, RedirectAttributes redirect) {
+    public String delete(@PathVariable int id, RedirectAttributes redirect, Locale locale) {
         contactService.delete(id);
-        redirect.addFlashAttribute("success", "Deleted contact successfully!");
+        redirect.addFlashAttribute("success", messageSource.getMessage("contact.delete.success", null, locale));
         return "redirect:/contact/all";
     }
 

@@ -4,6 +4,7 @@ import com.domain.Bookmark;
 import com.repository.BookmarkRepository;
 import com.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,14 +15,21 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.Locale;
 
 @Controller
 public class BookmarkController {
 
+    private final BookmarkRepository bookmarkRepository;
+    private final UserService userService;
+    private final MessageSource messageSource;
+
     @Autowired
-    private BookmarkRepository bookmarkRepository;
-    @Autowired
-    private UserService userService;
+    public BookmarkController(BookmarkRepository bookmarkRepository, UserService userService, MessageSource messageSource) {
+        this.bookmarkRepository = bookmarkRepository;
+        this.userService = userService;
+        this.messageSource = messageSource;
+    }
 
     /*
     *   Get current user
@@ -56,12 +64,12 @@ public class BookmarkController {
     }
 
     @PostMapping("/bookmark/save")
-    public String save(@Valid Bookmark bookmark, BindingResult result, RedirectAttributes redirect) {
+    public String save(@Valid Bookmark bookmark, BindingResult result, RedirectAttributes redirect, Locale locale) {
         if (result.hasErrors()) {
             return "bookmarkForm";
         }
         bookmarkRepository.save(bookmark);
-        redirect.addFlashAttribute("success", "Create new bookmark successfully!");
+        redirect.addFlashAttribute("success", messageSource.getMessage("bookmark.save.success", null, locale));
         return "redirect:/bookmark/all";
     }
 
@@ -72,9 +80,9 @@ public class BookmarkController {
     }
 
     @GetMapping("/bookmark/{id}/delete")
-    public String delete(@PathVariable Long id, RedirectAttributes redirect) {
+    public String delete(@PathVariable Long id, RedirectAttributes redirect, Locale locale) {
         bookmarkRepository.delete(id);
-        redirect.addFlashAttribute("success", "Deleted bookmark successfully!");
+        redirect.addFlashAttribute("success", messageSource.getMessage("bookmark.delete.success", null, locale));
         return "redirect:/bookmark/all";
     }
 

@@ -10,8 +10,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ContactServiceImpl implements ContactService {
 
+    private final ContactRepository contactRepository;
+
     @Autowired
-    private ContactRepository contactRepository;
+    public ContactServiceImpl(ContactRepository contactRepository) {
+        this.contactRepository = contactRepository;
+    }
 
     @Override
     public Iterable<Contact> findAll() {
