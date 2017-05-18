@@ -1,0 +1,63 @@
+<!--http://www.thymeleaf.org/doc/articles/springsecurity.html-->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head"></head>
+<title th:text='#{login.title}'> </title>
+<body>
+
+<nav th:replace="layout :: header"></nav>
+
+<div class="container main-content">
+
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3">
+            <div th:if="${param.error}" class="row alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <span>Invalid email or password</span>
+            </div>
+
+            <div th:if="${param.logout}" class="row alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <span>You have been logged out</span>
+            </div>
+
+            <div th:if="${success}" class="row alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <span th:text="${success}"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3">
+            <h3 th:text="#{login.welcome}"></h3>
+            <br/>
+            <form th:action="@{/login}" method="POST" class="form" action="#">
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" placeholder="Your email" id="email" class="form-control"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" placeholder="Your password" id="password" class="form-control"/>
+                </div>
+
+                <br/>
+
+                <button type="submit" class="btn btn-primary">Log In</button>
+                <br/>
+            </form>
+        </div>
+    </div>
+
+</div>
+<!-- /.container -->
+
+<footer th:replace="layout :: footer"></footer>
+</body>
+</html>

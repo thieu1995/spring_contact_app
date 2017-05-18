@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="layout :: head"></head>
+<title>Profile</title>
+<body>
+<nav th:replace="layout :: header"></nav>
+
+<div class="container main-content list">
+
+    <div class="row">
+        <section class="user_detail_wrapper">
+            <div class="col-md-5  toppad  pull-right col-md-offset-3 ">
+                <a class="edit_profile_style" th:href="@{/user/edit}">Edit Profile</a>
+                <a th:href="@{/}">Go to Home</a>
+                <br>
+                <p class=" text-info">May 05,2014,03:00 pm </p>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-md-offset-1 col-lg-offset-2 toppad">
+
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title" th:text="${user.fullname}"> </h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-md-3 col-lg-3 " align="center">
+                                <img alt="User Pic"
+                                     src="http://babyinfoforyou.com/wp-content/uploads/2014/10/avatar-300x300.png"
+                                     class="img-circle img-responsive">
+                            </div>
+
+                            <div class=" col-md-9 col-lg-9 ">
+                                <table class="table table-user-information">
+                                    <tbody>
+                                    <tr>
+                                        <td>ID:</td>
+                                        <td th:text="${user.id}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>FullName:</td>
+                                        <td th:text="${user.fullname}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Email</td>
+                                        <td th:text="${user.email}"> <a href="mailto:info@support.com"> ${user.email} </a> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Roles</td>
+                                        <<td> <div sec:authentication="principal.authorities"></div> </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Phone</td>
+                                        <td th:text="${user.phone}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Gender</td>
+                                        <td th:text="${user.gender}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Birthday</td>
+                                        <td th:text="${user.birthday}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Status</td>
+                                        <td th:text="${user.status}"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Create At:</td>
+                                        <td th:text="${user.createdAt}"></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                        <a th:href="@{/user/contact/all}" data-original-title="View Tasks" data-toggle="tooltip" type="button"
+                           class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-ok"></i></a>
+                        <span class="pull-right">
+                            <a th:href="@{/user/edit}" data-original-title="Edit this user" data-toggle="tooltip" type="button"
+                               class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+                            <a data-original-title="Remove this user" data-toggle="tooltip" type="button"
+                               class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+
+
+
+</div>
+<!-- /.container -->
+
+<footer th:replace="layout :: footer"></footer>
+</body>
+</html>

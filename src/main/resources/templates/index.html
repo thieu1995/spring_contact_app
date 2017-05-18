@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      th:with="lang=${#locale.language}" th:lang="${lang}">
+<head th:replace="layout :: head"></head>
+<title th:text='#{index.title}'> </title>
+
+<body>
+<nav th:replace="layout :: header"></nav>
+
+<div class="container main-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <h3 th:text="#{index.welcome}"></h3>
+        </div>
+    </div>
+</div>
+<!-- /.container -->
+
+<footer th:replace="layout :: footer"></footer>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head"></head>
+<body>
+<nav th:replace="layout :: header"></nav>
+
+<div class="container main-content form">
+    <div class="row">
+
+        <form action="#" th:action="@{/bookmark/save}" th:object="${bookmark}" method="POST" novalidate="novalidate">
+            <input type="hidden" th:field="*{id}"/>
+
+            <div class="form-group">
+                <label>Uri</label>
+                <input type="text" class="form-control" th:field="*{uri}" th:errorclass="field-error" placeholder="http://bookmark.com/2/bob"/>
+                <em th:if="${#fields.hasErrors('uri')}" th:errors="*{uri}"></em>
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea rows = "5" cols = "100" th:field="*{description}" th:errorclass="field-error"></textarea>
+                <em th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></em>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+
+    </div>
+</div><!-- /.container -->
+
+<footer th:replace="layout :: footer"></footer>
+</body>
+</html>

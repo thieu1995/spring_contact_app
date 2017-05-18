@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head"></head>
+<title th:text='#{signup.title}'> </title>
+<body>
+
+<nav th:replace="layout :: header"></nav>
+
+<div class="container main-content">
+
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3">
+            <div th:if="${param.error}" class="row alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <span>Invalid email or password</span>
+            </div>
+
+            <div th:if="${param.logout}" class="row alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <span>You have been logged out</span>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-lg-6 col-lg-offset-3">
+            <h3 th:text="#{signup.welcome}"></h3>
+            <br/>
+            <form action="#" th:action="@{/signup/save}" th:object="${user}" method="POST" novalidate="novalidate">
+                <input type="hidden" th:field="*{id}"/>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" th:field="*{email}" th:errorclass="field-error" id="email"/>
+                    <em th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></em>
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-control" th:field="*{password}" th:errorclass="field-error"/>
+                    <em th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></em>
+                </div>
+
+                <div class="form-group">
+                    <label>FullName</label>
+                    <input type="text" class="form-control" th:field="*{fullname}" th:errorclass="field-error"/>
+                    <em th:if="${#fields.hasErrors('fullname')}" th:errors="*{fullname}"></em>
+                </div>
+
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select th:field="*{gender}" class="form-control">
+                        <option th:value="men" th:text="men">Men</option>
+                        <option th:value="women" th:text="women">Women</option>
+                        <option th:value="unknow" th:text="unknow">Unknow</option>
+                    </select>
+                    <em th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></em>
+                </div>
+
+                <div class="form-group">
+                    <label>Birthday</label>
+                    <input type="date" class="form-control" th:field="*{birthday}" th:errorclass="field-error"/>
+                    <em th:if="${#fields.hasErrors('birthday')}" th:errors="*{birthday}"></em>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="text" class="form-control" th:field="*{phone}" th:errorclass="field-error"/>
+                    <em th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></em>
+                </div>
+
+                <input type="hidden" th:field="*{status}"/>
+                <input type="hidden" th:field="*{createdAt}"/>
+
+                <br>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+<!-- /.container -->
+
+<footer th:replace="layout :: footer"></footer>
+</body>
+</html>

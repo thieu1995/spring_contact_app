@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head th:replace="layout :: head"></head>
+<title>Dashboard</title>
+<body>
+<nav th:replace="layout :: header"></nav>
+
+<div class="container main-content list">
+
+    <div sec:authorize="hasRole('ROLE_ADMIN')" class="row">
+        <div class="col-xs-12">
+            <h3>Danh Sach User trong He Thong</h3>
+            <th:block th:unless="${#lists.isEmpty(users)}">
+                <div class="row">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                        <tr>
+                            <th>###</th>
+                            <th>Id</th>
+                            <th>Email</th>
+                            <th>Fullname</th>
+                            <th>Gender</th>
+                            <th>Birthday</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                            <th>Delete</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user,iterStat : ${users}">
+                            <td th:text="${iterStat.count}"></td>
+                            <td th:text="${user.id}"></td>
+                            <td th:text="${user.email}"></td>
+                            <td th:text="${user.fullname}"></td>
+                            <td th:text="${user.gender}"></td>
+                            <td th:text="${user.birthday}"></td>
+                            <td th:text="${user.phone}"></td>
+                            <td th:text="${user.status}"></td>
+                            <td th:text="${user.createdAt}"></td>
+                            <td>
+                                <a th:href="@{/admin/user/{id}/delete(id=${user.id})}"><span class="glyphicon glyphicon-trash"></span></a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </th:block>
+        </div>
+    </div>
+
+</div>
+<!-- /.container -->
+
+<footer th:replace="layout :: footer"></footer>
+</body>
+</html>
