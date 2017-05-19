@@ -1,0 +1,15 @@
+body {
+  font: 100% Helvetica, sans-serif;
+  color: #333333;
+  background-color: red;
+}
+
+.main-content {
+  margin-top: 70px;
+  padding: 20px;
+  border: 2px solid green;
+}
+
+input {
+  background-color: green !important;
+}

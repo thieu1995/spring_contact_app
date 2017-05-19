@@ -5,6 +5,8 @@ $background-color-website: red;
 $margin-for-wrapper-content: 70px;
 $padding-for-wrapper-content: 20px;
 
+$input-background-color: green;
+
 body {
   font: 100% $font-stack;
   color: $primary-color;
@@ -14,4 +16,9 @@ body {
 .main-content {
   margin-top: $margin-for-wrapper-content;
   padding: $padding-for-wrapper-content;
+  border: 2px solid green;
+}
+
+input {
+  background-color: $input-background-color !important;
 }
