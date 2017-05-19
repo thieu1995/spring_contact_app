@@ -24,9 +24,17 @@
         <java.version>1.8</java.version>
 
         <thymeleaf.version>3.0.6.RELEASE</thymeleaf.version>
+        <thymeleaf-extras-springsecurity4.version>3.0.2.RELEASE</thymeleaf-extras-springsecurity4.version>
         <thymeleaf-layout-dialect.version>2.2.1</thymeleaf-layout-dialect.version>
 
-        <libsass-maven-plugin.version>0.2.7-libsass_3.4.3</libsass-maven-plugin.version>
+        <sass-maven-plugin.version>1.1.1</sass-maven-plugin.version>
+        <servlet-api.version>2.5</servlet-api.version>
+
+        <bootstrap.version>3.3.7</bootstrap.version>
+        <jquery.version>1.12.4</jquery.version>
+
+        <yuicompressor-maven-plugin.version>1.5.1</yuicompressor-maven-plugin.version>
+        <maven-war-plugin.version>3.1.0</maven-war-plugin.version>
     </properties>
 
     <dependencies>
@@ -66,7 +74,7 @@
         <dependency>
             <groupId>org.thymeleaf.extras</groupId>
             <artifactId>thymeleaf-extras-springsecurity4</artifactId>
-            <version>3.0.2.RELEASE</version>
+            <version>${thymeleaf-extras-springsecurity4.version}</version>
         </dependency>
 
 
@@ -74,21 +82,36 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
+            <version>${servlet-api.version}</version>
         </dependency>
-
 
 
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>bootstrap</artifactId>
-            <version>3.3.7</version>
+            <version>${bootstrap.version}</version>
         </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
-            <version>1.12.4</version>
+            <version>${jquery.version}</version>
         </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/ro.isdc.wro4j/wro4j-core -->
+        <dependency>
+            <groupId>ro.isdc.wro4j</groupId>
+            <artifactId>wro4j-core</artifactId>
+            <version>1.8.0</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/ro.isdc.wro4j/wro4j-extensions -->
+        <dependency>
+            <groupId>ro.isdc.wro4j</groupId>
+            <artifactId>wro4j-extensions</artifactId>
+            <version>1.8.0</version>
+        </dependency>
+
 
     </dependencies>
 
@@ -99,10 +122,10 @@
             <plugin>
                 <groupId>org.jasig.maven</groupId>
                 <artifactId>sass-maven-plugin</artifactId>
-                <version>1.1.1</version>
+                <version>${sass-maven-plugin.version}</version>
                 <executions>
                     <execution>
-                        <phase>generate-sources</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>update-stylesheets</goal>
                         </goals>
@@ -121,11 +144,45 @@
                 </configuration>
             </plugin>
 
+            <!-- Maven compiler -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                </configuration>
+            </plugin>
+
+            <!-- Minified css and javascript -->
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>yuicompressor-maven-plugin</artifactId>
+                <version>${yuicompressor-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compress</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <nosuffix>true</nosuffix>
+                    <force>true</force>
+                    <webappDirectory>${project.build.directory}/classes/static</webappDirectory>
+                    <excludes>
+                        <exclude>**/*.min.js</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>${maven-war-plugin.version}</version>
+                <configuration>
+                    <webResources>
+                        <resource>
+                            <directory>${project.build.directory}/classes/static</directory>
+                        </resource>
+                    </webResources>
                 </configuration>
             </plugin>
 
