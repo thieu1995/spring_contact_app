@@ -14,7 +14,20 @@ import javax.validation.Valid;
 import java.util.Locale;
 
 @Controller
+@RequestMapping("contact")
 public class ContactController {
+
+    private static final String VIEW_CONTACT_LIST = "pages/contact/contactList";
+    private static final String VIEW_CONTACT_FORM = "pages/contact/contactForm";
+    private static final String REDIRECT_CONTACT_LIST = "redirect:/contact/all";
+
+    private static final String MODEL_ATTRIBUTE_CONTACTS = "contacts";
+    private static final String MODEL_ATTRIBUTE_CONTACT = "contact";
+
+    private static final String MESSAGE_SUCCESS_VARIABLE = "success";
+    private static final String MESSAGE_SAVE_VARIABLE = "contact.save.success";
+    private static final String MESSAGE_DELETE_VARIABLE = "contact.delete.success";
+
 
     private final ContactService contactService;
     private final MessageSource messageSource;
@@ -25,47 +38,47 @@ public class ContactController {
         this.messageSource = messageSource;
     }
 
-    @RequestMapping(value="/contact/all")
+    @RequestMapping(value="/all")
     public String viewAllContact(Model model) {
-        model.addAttribute("contacts", contactService.findAll());
-        return "contactList";
+        model.addAttribute(MODEL_ATTRIBUTE_CONTACTS, contactService.findAll());
+        return VIEW_CONTACT_LIST;
     }
 
-    @RequestMapping(value="/contact/create")
+    @RequestMapping(value="/create")
     public String displayFormCreateNewContact(Model model) {
-        model.addAttribute("contact", new Contact());
-        return "contactForm";
+        model.addAttribute(MODEL_ATTRIBUTE_CONTACT, new Contact());
+        return VIEW_CONTACT_FORM;
     }
 
-    @PostMapping("/contact/save")
+    @PostMapping("/save")
     public String save(@Valid Contact contact, BindingResult result, RedirectAttributes redirect, Locale locale) {
         if (result.hasErrors()) {
-            return "contactForm";
+            return VIEW_CONTACT_FORM;
         }
         contactService.save(contact);
-        redirect.addFlashAttribute("success", messageSource.getMessage("contact.save.success", null, locale));
-        return "redirect:/contact/all";
+        redirect.addFlashAttribute(MESSAGE_SUCCESS_VARIABLE, messageSource.getMessage(MESSAGE_SAVE_VARIABLE, null, locale));
+        return REDIRECT_CONTACT_LIST;
     }
 
-    @GetMapping("/contact/{id}/edit")
+    @GetMapping("/{id}/edit")
     public String edit(@PathVariable int id, Model model) {
-        model.addAttribute("contact", contactService.findOne(id));
-        return "contactForm";
+        model.addAttribute(MODEL_ATTRIBUTE_CONTACT, contactService.findOne(id));
+        return VIEW_CONTACT_FORM;
     }
 
-    @GetMapping("/contact/{id}/delete")
+    @GetMapping("/{id}/delete")
     public String delete(@PathVariable int id, RedirectAttributes redirect, Locale locale) {
         contactService.delete(id);
-        redirect.addFlashAttribute("success", messageSource.getMessage("contact.delete.success", null, locale));
-        return "redirect:/contact/all";
+        redirect.addFlashAttribute(MESSAGE_SUCCESS_VARIABLE, messageSource.getMessage(MESSAGE_DELETE_VARIABLE, null, locale));
+        return REDIRECT_CONTACT_LIST;
     }
 
-    @GetMapping("/contact/search")
+    @GetMapping("/search")
     public String search(@RequestParam("q") String q, Model model) {
         if (q.equals("")) {
-            return "redirect:/contact/all";
+            return REDIRECT_CONTACT_LIST;
         }
-        model.addAttribute("contacts", contactService.search(q));
-        return "contactList";
+        model.addAttribute(MODEL_ATTRIBUTE_CONTACTS, contactService.search(q));
+        return VIEW_CONTACT_LIST;
     }
 }

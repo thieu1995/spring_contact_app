@@ -14,8 +14,15 @@
             th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"
             rel="stylesheet" />
     <!-- Custom style -->
-    <link href="../static/css/style.css" th:href="@{/css/style.css}"
-          rel="stylesheet" />
+    <link th:href="@{/styles.css}" rel="stylesheet" />
+
+    <style rel="stylesheet">
+        .main-content {
+            margin-top: 70px;
+            border: 2px solid green;
+            padding: 20px;
+        }
+    </style>
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"

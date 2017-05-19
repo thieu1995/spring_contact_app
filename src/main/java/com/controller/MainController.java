@@ -1,6 +1,5 @@
 package com.controller;
 
-import com.domain.Contact;
 import com.domain.User;
 import com.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,18 @@ import java.util.Locale;
 @Controller
 public class MainController {
 
+    private static final String VIEW_INDEX = "pages/index";
+    private static final String VIEW_403 = "pages/403";
+    private static final String VIEW_ADMIN = "pages/admin";
+    private static final String VIEW_LOGIN = "pages/authen/login";
+    private static final String VIEW_SIGNUP = "pages/authen/signup";
+    private static final String MODEL_ATTRIBUTE_USER = "user";
+    private static final String MESSAGE_SUCCESS_VARIABLE = "success";
+    private static final String MESSAGE_SIGNUP_VARIABLE = "user.signup.success";
+    private static final String REDIRECT_HOME = "redirect:/";
+    private static final String REDIRECT_LOGIN = "redirect:/login";
+
+
     private final UserService userService;
     private final MessageSource messageSource;
 
@@ -33,22 +44,22 @@ public class MainController {
 
     @GetMapping("/")
     public String index() {
-        return "index";
+        return VIEW_INDEX;
     }
 
     @GetMapping("/admin")
     public String admin() {
-        return "admin";
+        return VIEW_ADMIN;
     }
 
     @GetMapping("/403")
     public String accessDenied() {
-        return "403";
+        return VIEW_403;
     }
 
     @GetMapping("/login")
     public String getLogin() {
-        return "login";
+        return VIEW_LOGIN;
     }
 
     @GetMapping("/logout")
@@ -57,30 +68,22 @@ public class MainController {
         if (auth != null) {
             new SecurityContextLogoutHandler().logout(request, response, auth);
         }
-        return "redirect:/";
+        return REDIRECT_HOME;
     }
 
-
-
-    /*
-    All required fields are filled (No empty or null fields)
-    The email address is valid (well-formed)
-    The password confirmation field matches the password field
-    The account doesn’t already exist
-    */
     @GetMapping("/signup")
     public String getSignup(Model model) {
-        model.addAttribute("user", new User());
-        return "signup";
+        model.addAttribute(MODEL_ATTRIBUTE_USER, new User());
+        return VIEW_SIGNUP;
     }
 
     @PostMapping("/signup/save")
     public String saveUser(@Valid User user, BindingResult result, RedirectAttributes redirect, Locale locale) {
         if (result.hasErrors()) {
-            return "signup";
+            return VIEW_SIGNUP;
         }
         userService.save(user);
-        redirect.addFlashAttribute("success", messageSource.getMessage("user.signup.success", null, locale));
-        return "redirect:/login";
+        redirect.addFlashAttribute(MESSAGE_SUCCESS_VARIABLE, messageSource.getMessage(MESSAGE_SIGNUP_VARIABLE, null, locale));
+        return REDIRECT_LOGIN;
     }
 }

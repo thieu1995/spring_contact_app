@@ -18,7 +18,20 @@ import javax.validation.Valid;
 import java.util.Locale;
 
 @Controller
+@RequestMapping("bookmark")
 public class BookmarkController {
+
+    private static final String VIEW_BOOKMARK_LIST = "pages/bookmark/bookmarkList";
+    private static final String VIEW_BOOKMARK_FORM = "pages/bookmark/bookmarkForm";
+    private static final String REDIRECT_BOOKMARK_LIST = "redirect:/bookmark/all";
+
+    private static final String MODEL_ATTRIBUTE_BOOKMARKS = "bookmarks";
+    private static final String MODEL_ATTRIBUTE_BOOKMARK = "bookmark";
+
+    private static final String MESSAGE_SUCCESS_VARIABLE = "success";
+    private static final String MESSAGE_SAVE_VARIABLE = "bookmark.save.success";
+    private static final String MESSAGE_DELETE_VARIABLE = "bookmark.delete.success";
+
 
     private final BookmarkRepository bookmarkRepository;
     private final UserService userService;
@@ -47,51 +60,49 @@ public class BookmarkController {
     }
 
 
-    @RequestMapping(value="/bookmark/all")
+    @RequestMapping(value="/all")
     public String viewListBookmarks(Model model) {
-        model.addAttribute("bookmarks", bookmarkRepository.findBookmarkByUserId(getCurrentUserId()));
-        return "bookmarkList";
+        model.addAttribute(MODEL_ATTRIBUTE_BOOKMARKS, bookmarkRepository.findBookmarkByUserId(getCurrentUserId()));
+        return VIEW_BOOKMARK_LIST;
     }
 
-    @RequestMapping(value="/bookmark/create")
+    @RequestMapping(value="/create")
     public String displayFormCreateNewBookmark(Model model) {
         Bookmark b = new Bookmark();
         b.setUser(userService.findOneByEmail(getCurrentUser()));
-        System.out.println(userService.findOneByEmail(getCurrentUser()));
-        System.out.println(b.getUser().getId());
-        model.addAttribute("bookmark", b);
-        return "bookmarkForm";
+        model.addAttribute(MODEL_ATTRIBUTE_BOOKMARK, b);
+        return VIEW_BOOKMARK_FORM;
     }
 
-    @PostMapping("/bookmark/save")
+    @PostMapping("/save")
     public String save(@Valid Bookmark bookmark, BindingResult result, RedirectAttributes redirect, Locale locale) {
         if (result.hasErrors()) {
-            return "bookmarkForm";
+            return VIEW_BOOKMARK_FORM;
         }
         bookmarkRepository.save(bookmark);
-        redirect.addFlashAttribute("success", messageSource.getMessage("bookmark.save.success", null, locale));
-        return "redirect:/bookmark/all";
+        redirect.addFlashAttribute(MESSAGE_SUCCESS_VARIABLE, messageSource.getMessage(MESSAGE_SAVE_VARIABLE, null, locale));
+        return REDIRECT_BOOKMARK_LIST;
     }
 
-    @GetMapping("/bookmark/{id}/edit")
+    @GetMapping("/{id}/edit")
     public String edit(@PathVariable Long id, Model model) {
-        model.addAttribute("bookmark", bookmarkRepository.findOne(id));
-        return "bookmarkForm";
+        model.addAttribute(MODEL_ATTRIBUTE_BOOKMARK, bookmarkRepository.findOne(id));
+        return VIEW_BOOKMARK_FORM;
     }
 
-    @GetMapping("/bookmark/{id}/delete")
+    @GetMapping("/{id}/delete")
     public String delete(@PathVariable Long id, RedirectAttributes redirect, Locale locale) {
         bookmarkRepository.delete(id);
-        redirect.addFlashAttribute("success", messageSource.getMessage("bookmark.delete.success", null, locale));
-        return "redirect:/bookmark/all";
+        redirect.addFlashAttribute(MESSAGE_SUCCESS_VARIABLE, messageSource.getMessage(MESSAGE_DELETE_VARIABLE, null, locale));
+        return REDIRECT_BOOKMARK_LIST;
     }
 
-    @GetMapping("/bookmark/search")
+    @GetMapping("/search")
     public String search(@RequestParam("uri") String uri, Model model) {
         if (uri.equals("")) {
-            return "redirect:/bookmark/all";
+            return REDIRECT_BOOKMARK_LIST;
         }
-        model.addAttribute("bookmarks", bookmarkRepository.findAllByUriContaining(uri));
-        return "bookmarkList";
+        model.addAttribute(MODEL_ATTRIBUTE_BOOKMARKS, bookmarkRepository.findAllByUriContaining(uri));
+        return VIEW_BOOKMARK_LIST;
     }
 }

@@ -1,0 +1,17 @@
+$font-stack:    Helvetica, sans-serif;
+$primary-color: #333;
+$background-color-website: red;
+
+$margin-for-wrapper-content: 70px;
+$padding-for-wrapper-content: 20px;
+
+body {
+  font: 100% $font-stack;
+  color: $primary-color;
+  background-color: $background-color-website;
+}
+
+.main-content {
+  margin-top: $margin-for-wrapper-content;
+  padding: $padding-for-wrapper-content;
+}

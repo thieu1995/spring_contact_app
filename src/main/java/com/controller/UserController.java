@@ -1,15 +1,12 @@
 package com.controller;
 
-import com.domain.Contact;
 import com.domain.User;
-import com.service.ContactService;
 import com.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,11 +14,19 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.Locale;
 
 @Controller
+@RequestMapping("user")
 public class UserController {
+
+    private static final String VIEW_USER_PROFILE = "pages/user/userProfile";
+    private static final String VIEW_USER_EDIT_FORM = "pages/user/userEditForm";
+    private static final String REDIRECT_USER_PROFILE = "redirect:/user/profile";
+    private static final String MODEL_ATTRIBUTE_USER = "user";
+    private static final String MESSAGE_SUCCESS_VARIABLE = "success";
+    private static final String MESSAGE_SAVE_VARIABLE = "user.save.success";
+
 
     private final UserService userService;
     private final MessageSource messageSource;
@@ -32,56 +37,26 @@ public class UserController {
         this.messageSource = messageSource;
     }
 
-    /*
-    *   Handle admin user controller
-    * */
-    @RequestMapping(value="/admin/user/all")
-    public String viewAllUser(Model model) {
-        model.addAttribute("users", userService.findAll());
-        return "userList";
-    }
-
-    @GetMapping("/admin/user/{id}/delete")
-    public String delete(@PathVariable int id, RedirectAttributes redirect, Locale locale) {
-        userService.deleteById(id);
-        redirect.addFlashAttribute("success", messageSource.getMessage("user.delete.success", null, locale));
-        return "redirect:/admin/user/all";
-    }
-
-    @GetMapping("/admin/user/search")
-    public String search(@RequestParam("name") String name, Model model) {
-        if (name.equals("")) {
-            return "redirect:/admin/user/all";
-        }
-        model.addAttribute("users", userService.searchByFullname(name));
-        return "userList";
-    }
-
-
-
-    /*
-    * Handle user controller
-    * */
-    @RequestMapping(value="/user/profile")
+    @RequestMapping(value="/profile")
     public String viewProfile(Model model) {
-        model.addAttribute("user", userService.findOneByEmail(getCurrentUser()));
-        return "userProfile";
+        model.addAttribute(MODEL_ATTRIBUTE_USER, userService.findOneByEmail(getCurrentUser()));
+        return VIEW_USER_PROFILE;
     }
 
-    @RequestMapping(value="/user/edit")
+    @RequestMapping(value="/edit")
     public String showUserEditForm(Model model) {
-        model.addAttribute("user", userService.findOneByEmail(getCurrentUser()));
-        return "userEditForm";
+        model.addAttribute(MODEL_ATTRIBUTE_USER, userService.findOneByEmail(getCurrentUser()));
+        return VIEW_USER_EDIT_FORM;
     }
 
-    @PostMapping(value="/user/edit/save")
+    @PostMapping(value="/edit/save")
     public String processEditUser(@Valid User user, BindingResult result, RedirectAttributes redirect, Locale locale) {
         if (result.hasErrors()) {
-            return "userEditForm";
+            return VIEW_USER_EDIT_FORM;
         }
         userService.save(user);
-        redirect.addFlashAttribute("success", messageSource.getMessage("user.save.success", null, locale));
-        return "redirect:/user/profile";
+        redirect.addFlashAttribute(MESSAGE_SUCCESS_VARIABLE, messageSource.getMessage(MESSAGE_SAVE_VARIABLE, null, locale));
+        return REDIRECT_USER_PROFILE;
     }
 
 
